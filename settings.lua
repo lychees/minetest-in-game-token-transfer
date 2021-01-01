@@ -14,3 +14,5 @@ pickp.settings.zone_2_3_limit = tonumber(settings:get("zone_2_3_limit"))
 pickp.settings.zone1_stealth_ratio = tonumber(settings:get("zone1_stealth_ratio"))
 pickp.settings.zone2_stealth_ratio = tonumber(settings:get("zone2_stealth_ratio"))
 pickp.settings.zone3_stealth_ratio = tonumber(settings:get("zone3_stealth_ratio"))
+pickp.settings.warning_failed_thief_ratio = tonumber(settings:get("warning_failed_thief_ratio"))
+

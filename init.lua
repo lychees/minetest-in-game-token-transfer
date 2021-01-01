@@ -9,6 +9,7 @@ assert(loadfile(modpath.. "/settings.lua"))(modpath)
 
 local _contexts = {}
 
+--Aunction for copy a table in deep (children too)
 local function deepCopy(original)
 	local copy = {}
 	for k, v in pairs(original) do
@@ -126,7 +127,6 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "pickp:form" then
 		return
 	end
-	minetest.chat_send_all("TEST")
 	if not player then
 		return
 	end
@@ -171,7 +171,7 @@ local function stealth(clicker, clicked)
 	end
 	--1) CHECK THE DISTANCE
 	if not(check_distance(clicker, clicked)) then
-		disable_stealth(clicker, true, "Failed Robbery!")
+		disable_stealth(clicker, true, "The victim has walked away!")
 		return
 	end
 	--2) CHECK THE ANGLE
@@ -198,6 +198,16 @@ local function stealth(clicker, clicked)
 	end
 	--DETECTED!
 	disable_stealth(clicker, true, "Failed Robbery!")
+	--DETECTION WARNING
+	local msg = ""
+	if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
+		msg = S("Someone has tried to steal from you!")
+	else
+		msg = clicked_name.." "..S("tried to steal from you!")
+	end
+	if not (msg == "") then
+		minetest.chat_send_player(clicked_name, msg)
+	end
 end
 
 local function pickpocketing(clicker, clicked)
