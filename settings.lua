@@ -15,4 +15,6 @@ pickp.settings.zone1_stealth_ratio = tonumber(settings:get("zone1_stealth_ratio"
 pickp.settings.zone2_stealth_ratio = tonumber(settings:get("zone2_stealth_ratio"))
 pickp.settings.zone3_stealth_ratio = tonumber(settings:get("zone3_stealth_ratio"))
 pickp.settings.warning_failed_thief_ratio = tonumber(settings:get("warning_failed_thief_ratio"))
+pickp.settings.warning_hotbar_item = tonumber(settings:get("warning_hotbar_item"))
+pickp.settings.warning_main_item = tonumber(settings:get("warning_main_item"))
 
