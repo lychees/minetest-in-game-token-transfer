@@ -106,33 +106,39 @@ local function get_rob_list(clicked)
 	end
 	--minetest.chat_send_all("hotbar_after="..tostring(#list_hotbar))
 	local i = 1
-	local item_stack, item_name
-	for y= 0, 3 do
+	local item_stack, item_name, columns
+	for y= 1, 4 do
 		if i > #list_hotbar then
 			break
 		end
+		columns = y
 		for x= 0,3 do
 			if list_hotbar[i] then
 				item_stack = list_hotbar[i].itemstack
 				item_name = item_stack:get_name()
-				rob_list = rob_list .. " item_image_button [".. tostring(x)..",".. tostring(y) ..";1,1;"
+				rob_list = rob_list .. " item_image_button [".. tostring(x)..".3"..",".. tostring(y)..".6"..";1,1;"
 				.. item_name .. ";item_name;"..tostring(i).."]"
 				i = i + 1
 			else
 				i = i + 1
 			end
 			if i > #list_hotbar then
-					break
+				break
 			end
 		end
 	end
 	--minetest.chat_send_all("rob_list="..rob_list)
-	return rob_list, list_hotbar
+	return rob_list, list_hotbar, columns
 end
 
-local function get_formspec(clicker, clicked, rob_list)
+local function get_formspec(clicker, clicked, rob_list,columns)
+	columns = columns + 1
 	local formspec =
-		"size[4,4]" ..
+		"formspec_version[4]" ..
+		"size[4.6,"..tostring(columns)..".9]" ..
+		"image[0.30,0.30;1,1;pickp_thief_face.png]" ..
+		"label[1.5,0.65;"..S("Pick up an object").."]" ..
+		"label[1.5,1;"..S("quickly!").."]" ..
 		rob_list
 	return formspec
 end
@@ -270,10 +276,10 @@ end
 
 local function pickpocketing(clicker, clicked)
 	local clicker_name = clicker:get_player_name()
-	local rob_list, rob_table = get_rob_list(clicked)
+	local rob_list, rob_table, columns = get_rob_list(clicked)
 	if not(rob_list == "") then
 		minetest.show_formspec(clicker_name,
-			"pickp:form", get_formspec(clicker, clicked, rob_list))
+			"pickp:form", get_formspec(clicker, clicked, rob_list, columns))
 		local angle_2d = get_angle(clicker, clicked)
 		enable_steal(clicker, clicked, rob_table, angle_2d) --mark as stealing
 		minetest.after(pickp.settings["stealth_timing"], stealth, clicker, clicked)
