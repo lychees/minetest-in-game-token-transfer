@@ -21,6 +21,17 @@ local function deepCopy(original)
 	return copy
 end
 
+function pickp.make_sound(dest_type, dest, soundfile, max_hear_distance)
+	if dest_type == "object" then
+		minetest.sound_play(soundfile, {object = dest, gain = 0.5, max_hear_distance = max_hear_distance or 10,})
+	 elseif dest_type == "player" then
+		local player_name = dest:get_player_name()
+		minetest.sound_play(soundfile, {to_player = player_name, gain = 0.5, max_hear_distance = max_hear_distance or 10,})
+	 elseif dest_type == "pos" then
+		minetest.sound_play(soundfile, {pos = dest, gain = 0.5, max_hear_distance = 10 or max_hear_distance,})
+	end
+end
+
 local function enable_steal(clicker, clicked, rob_table, angle_2d)
 	local steal_table = {}
 	steal_table["clicked"] = clicked:get_player_name()
@@ -183,7 +194,8 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		end
 		stealth_ratio = stealth_ratio - type_item_reduction_factor
 
-		if math.random(0,1) >= stealth_ratio then --NOT detected
+		if math.random(0,1) >= stealth_ratio then
+			--NOT detected
 			minetest.chat_send_player(player:get_player_name(), S("Successful robbery!"))
 		else
 			--DETECTION WARNING
@@ -196,6 +208,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			end
 			if not (msg == "") then
 				minetest.chat_send_player(clicked_name, msg)
+				if pickp.settings["sound_alarm"] then
+					pickp.make_sound("player", clicked, "pickp_alarm", 10)
+				end
 			end
 		end
 	else
@@ -237,6 +252,9 @@ local function stealth(clicker, clicked)
 	end
 	--DETECTED!
 	disable_stealth(clicker, true, "Failed Robbery!")
+	if pickp.settings["sound_fail"] then
+		pickp.make_sound("player", clicker, "pickp_fail", 10)
+	end
 	--DETECTION WARNING
 	local msg = ""
 	if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
@@ -246,6 +264,9 @@ local function stealth(clicker, clicked)
 	end
 	if not (msg == "") then
 		minetest.chat_send_player(clicked_name, msg)
+		if pickp.settings["sound_alarm"] then
+			pickp.make_sound("player", clicked, "pickp_alarm", 10)
+		end
 	end
 end
 
@@ -260,6 +281,9 @@ local function pickpocketing(clicker, clicked)
 		minetest.after(pickp.settings["stealth_timing"], stealth, clicker, clicked)
 	else
 		minetest.chat_send_player(clicker_name, S("Failed robbery!"))
+		if pickp.settings["sound_fail"] then
+			pickp.make_sound("player", clicker, "pickp_fail", 10)
+		end
 	end
 end
 

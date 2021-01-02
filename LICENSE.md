@@ -1,3 +1,17 @@
 #License
 
-- Code: GPLv3
+## Code
+
+- GPLv3
+
+## Sounds:
+
+- pickp_alarm.ogg
+-- Author= djlprojects
+-- url= https://freesound.org/people/djlprojects/sounds/413641/
+-- License= This work is licensed under the Creative Commons 0 License.
+
+- pickp_fail.ogg
+-- Author= HipsterTypist
+-- url= https://freesound.org/people/HipsterTypist/sounds/527491/
+-- License= This work is licensed under the Creative Commons 0 License.
