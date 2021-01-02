@@ -4,7 +4,7 @@
 
 - GPLv3
 
-##Textures
+## Textures
 
 - CC BY-SA 4.0
 
