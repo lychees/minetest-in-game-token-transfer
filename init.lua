@@ -182,11 +182,20 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	local inv_clicked = clicked:get_inventory()
 	--Search the item to rob in the clicked player
 	if inv_clicked:contains_item("main", steal_itemstack) then
+
 		local steal_itemstack_name = steal_itemstack:get_name()
 		local steal_amount = math.random(1, steal_itemstack:get_count())
-		local final_steal_itemstack = steal_itemstack_name .. " " .. tostring(steal_amount)
+		local final_steal_itemstack = ItemStack(steal_itemstack_name .. " " .. tostring(steal_amount))
+
 		inv_clicked:remove_item("main", final_steal_itemstack)
-		inv_clicker:add_item("main", final_steal_itemstack)
+
+		if inv_clicker:room_for_item("main", final_steal_itemstack) then
+			inv_clicker:add_item("main", final_steal_itemstack)
+		else
+			local clicker_pos = player:get_pos()
+			minetest.item_drop(final_steal_itemstack, player, clicker_pos)
+		end
+
 		disable_stealth(player, true, false)
 
 		--DETECTION WARNING
