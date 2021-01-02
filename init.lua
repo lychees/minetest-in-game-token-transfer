@@ -169,7 +169,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		inv_clicked:remove_item("main", final_steal_itemstack)
 		inv_clicker:add_item("main", final_steal_itemstack)
 		disable_stealth(player, true, false)
+
 		--DETECTION WARNING
+
 		--Check the angle/ratio
 		local angle_2d = get_angle(player, clicked)
 		local stealth_ratio = get_stealth_ratio(angle_2d)
@@ -180,23 +182,24 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			type_item_reduction_factor = pickp.settings["warning_hotbar_item"]
 		end
 		stealth_ratio = stealth_ratio - type_item_reduction_factor
+
+		if math.random(0,1) >= stealth_ratio then --NOT detected
+			minetest.chat_send_player(player:get_player_name(), S("Successful robbery!"))
+		else
+			--DETECTION WARNING
+			local msg = ""
+			local clicked_name = clicked:get_player_name()
+			if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
+				msg = S("Someone has stolen from you!")
+			else
+				msg = clicked_name.." "..S("has stolen from you")
+			end
+			if not (msg == "") then
+				minetest.chat_send_player(clicked_name, msg)
+			end
+		end
 	else
 		disable_stealth(player, true, "The player has moved his items!")
-	end
-	if math.random(0,1) >= stealth_ratio then --NOT detected
-		minetest.chat_send_player(player:get_player_name(), S("Successful robbery!"))
-	else
-		--DETECTION WARNING
-		local msg = ""
-		local clicked_name = clicked:get_player_name()
-		if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
-			msg = S("Someone has stolen from you!")
-		else
-			msg = clicked_name.." "..S("has stolen from you")
-		end
-		if not (msg == "") then
-			minetest.chat_send_player(clicked_name, msg)
-		end
 	end
 	return true
 end)
