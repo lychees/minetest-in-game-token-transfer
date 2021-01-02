@@ -135,6 +135,7 @@ local function get_angle(clicker, clicked)
 end
 
 local function get_stealth_ratio(angle_2d)
+	local stealth_ratio
 	if angle_2d <= pickp.settings["zone_1_2_limit"] then
 		stealth_ratio = pickp.settings["zone1_stealth_ratio"]
 	elseif angle_2d > pickp.settings["zone_1_2_limit"] and angle_2d < pickp.settings["zone_2_3_limit"] then
