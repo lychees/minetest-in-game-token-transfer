@@ -192,7 +192,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 		else
 			type_item_reduction_factor = pickp.settings["warning_hotbar_item"]
 		end
-		stealth_ratio = stealth_ratio - type_item_reduction_factor
+		stealth_ratio = stealth_ratio + type_item_reduction_factor
 
 		if math.random(0,1) >= stealth_ratio then
 			--NOT detected

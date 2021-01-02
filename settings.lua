@@ -17,6 +17,6 @@ pickp.settings.zone3_stealth_ratio = tonumber(settings:get("zone3_stealth_ratio"
 pickp.settings.warning_failed_thief_ratio = tonumber(settings:get("warning_failed_thief_ratio"))
 pickp.settings.warning_hotbar_item = tonumber(settings:get("warning_hotbar_item"))
 pickp.settings.warning_main_item = tonumber(settings:get("warning_main_item"))
-pickp.settings.sound_alarm = settings:get_bool("sound_alarm")
-pickp.settings.sound_fail = settings:get_bool("sound_fail")
+pickp.settings.sound_alarm = settings:get_bool("sound_alarm") or true
+pickp.settings.sound_fail = settings:get_bool("sound_fail") or true
 
