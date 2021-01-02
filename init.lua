@@ -199,18 +199,16 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			minetest.chat_send_player(player:get_player_name(), S("Successful robbery!"))
 		else
 			--DETECTION WARNING
-			local msg = ""
 			local clicked_name = clicked:get_player_name()
+			local msg
 			if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
 				msg = S("Someone has stolen from you!")
 			else
 				msg = clicked_name.." "..S("has stolen from you")
 			end
-			if not (msg == "") then
-				minetest.chat_send_player(clicked_name, msg)
-				if pickp.settings["sound_alarm"] then
-					pickp.make_sound("player", clicked, "pickp_alarm", 10)
-				end
+			minetest.chat_send_player(clicked_name, msg)
+			if pickp.settings["sound_alarm"] then
+				pickp.make_sound("player", clicked, "pickp_alarm", 10)
 			end
 		end
 	else
@@ -256,17 +254,15 @@ local function stealth(clicker, clicked)
 		pickp.make_sound("player", clicker, "pickp_fail", 10)
 	end
 	--DETECTION WARNING
-	local msg = ""
+	local msg
 	if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
 		msg = S("Someone has tried to steal from you!")
 	else
 		msg = clicked_name.." "..S("tried to steal from you!")
 	end
-	if not (msg == "") then
-		minetest.chat_send_player(clicked_name, msg)
-		if pickp.settings["sound_alarm"] then
-			pickp.make_sound("player", clicked, "pickp_alarm", 10)
-		end
+	minetest.chat_send_player(clicked_name, msg)
+	if pickp.settings["sound_alarm"] then
+		pickp.make_sound("player", clicked, "pickp_alarm", 10)
 	end
 end
 
