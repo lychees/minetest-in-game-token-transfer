@@ -96,15 +96,15 @@ local function get_rob_list(clicked)
 	if #list_hotbar == 0 and #list_main == 0 then
 		return rob_list, nil
 	end
-	minetest.chat_send_all("hotbar_before="..tostring(#list_hotbar))
-	minetest.chat_send_all("main="..tostring(#list_main))
+	--minetest.chat_send_all("hotbar_before="..tostring(#list_hotbar))
+	--minetest.chat_send_all("main="..tostring(#list_main))
 	--merge the tables
 	if #list_main > 0 then
 		for key,value in pairs(list_main) do
 			table.insert(list_hotbar, value)
 		end
 	end
-	minetest.chat_send_all("hotbar_after="..tostring(#list_hotbar))
+	--minetest.chat_send_all("hotbar_after="..tostring(#list_hotbar))
 	local i = 1
 	local item_stack, item_name
 	for y= 0, 3 do
