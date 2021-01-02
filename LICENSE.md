@@ -4,6 +4,10 @@
 
 - GPLv3
 
+##Textures
+
+- CC BY-SA 4.0
+
 ## Sounds:
 
 - pickp_alarm.ogg
