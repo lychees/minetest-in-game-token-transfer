@@ -137,7 +137,7 @@ local function get_formspec(clicker, clicked, rob_list,columns)
 		"formspec_version[4]" ..
 		"size[4.6,"..tostring(columns)..".9]" ..
 		"image[0.30,0.30;1,1;pickp_thief_face.png]" ..
-		"label[1.5,0.65;"..S("Pick up an object").."]" ..
+		"label[1.5,0.65;"..S("Pick up an item").."]" ..
 		"label[1.5,1;"..S("quickly!").."]" ..
 		rob_list
 	return formspec
