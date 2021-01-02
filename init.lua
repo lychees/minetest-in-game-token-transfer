@@ -77,18 +77,18 @@ local function get_rob_list(clicked)
 	local inv = clicked:get_inventory()
 	local list_inv = inv:get_list("main")
 	local list_hotbar = {}
-	for i=1,pickp.settings["hotbar_size"] do
+	for i=1,pickp.settings["hotbar_size"],1 do
 		if list_inv[i]:get_count() > 0 then
 			if math.random(0,1) < pickp.settings["hotbar_ratio"] then
-				table.insert(list_hotbar, {itemstack = list_inv[i], type = "hotbar"})
+				list_hotbar[#list_hotbar+1] = {itemstack = list_inv[i], type = "hotbar"}
 			end
 		end
 	end
 	local list_main = {}
-	for i=pickp.settings["hotbar_size"]+1,#list_inv do
+	for i=pickp.settings["hotbar_size"]+1,#list_inv,1 do
 		if list_inv[i]:get_count() > 0 then
 			if math.random(0,1) < pickp.settings["main_ratio"] then
-				table.insert(list_main, {itemstack = list_inv[i], type = "main"})
+				list_main[#list_main+1] = {itemstack = list_inv[i], type = "main"}
 			end
 		end
 	end
@@ -96,17 +96,15 @@ local function get_rob_list(clicked)
 	if #list_hotbar == 0 and #list_main == 0 then
 		return rob_list, nil
 	end
-	--minetest.chat_send_all("hotbar_before="..tostring(#list_hotbar))
-	--minetest.chat_send_all("main="..tostring(#list_main))
+	minetest.chat_send_all("hotbar_before="..tostring(#list_hotbar))
+	minetest.chat_send_all("main="..tostring(#list_main))
 	--merge the tables
 	if #list_main > 0 then
-		local j = 1
-		for i = 1, #list_main do
-			list_hotbar[#list_hotbar+j] = list_main[i]
-			j = j + 1
+		for key,value in pairs(list_main) do
+			table.insert(list_hotbar, value)
 		end
 	end
-	--minetest.chat_send_all("hotbar_after="..tostring(#list_hotbar))
+	minetest.chat_send_all("hotbar_after="..tostring(#list_hotbar))
 	local i = 1
 	local item_stack, item_name
 	for y= 0, 3 do
