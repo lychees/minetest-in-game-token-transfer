@@ -107,21 +107,25 @@ local function get_rob_list(clicked)
 		end
 	end
 	--minetest.chat_send_all("hotbar_after="..tostring(#list_hotbar))
-	local i = 0
+	local i = 1
 	local item_stack, item_name
 	for y= 0, 3 do
 		if i > #list_hotbar then
 			break
 		end
 		for x= 0,3 do
-			i = i + 1
-			if i > #list_hotbar then
-				break
-			end
-			item_stack = list_hotbar[i].itemstack
-			item_name = item_stack:get_name()
-			rob_list = rob_list .. " item_image_button [".. tostring(x)..",".. tostring(y) ..";1,1;"
+			if list_hotbar[i] then
+				item_stack = list_hotbar[i].itemstack
+				item_name = item_stack:get_name()
+				rob_list = rob_list .. " item_image_button [".. tostring(x)..",".. tostring(y) ..";1,1;"
 				.. item_name .. ";item_name;"..tostring(i).."]"
+				i = i + 1
+			else
+				i = i + 1
+			end
+			if i > #list_hotbar then
+					break
+			end
 		end
 	end
 	--minetest.chat_send_all("rob_list="..rob_list)
