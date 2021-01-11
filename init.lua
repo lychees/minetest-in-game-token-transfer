@@ -300,13 +300,13 @@ local function pickpocketing(clicker, clicked)
 	end
 end
 
-p2p.register_on_right_clickplayer(function(clicker, clicked)
+minetest.register_on_rightclickplayer(function(player, clicker)
 	local controls = clicker:get_player_control()
 	if controls.sneak and not(is_stealing(clicker)) then
-		if not(check_distance(clicker, clicked)) then
+		if not(check_distance(clicker, player)) then
 			minetest.chat_send_player(clicker:get_player_name(), S("Too far to steal!"))
 			return
 		end
-		pickpocketing(clicker, clicked)
+		pickpocketing(clicker, player)
 	end
 end)
