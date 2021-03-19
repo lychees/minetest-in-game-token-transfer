@@ -44,7 +44,7 @@ local function disable_stealth(player, close_form, msg)
 	local player_name = player:get_player_name()
 	_contexts[player_name] = nil
 	if msg then
-		minetest.chat_send_player(player_name, S(msg))
+		minetest.chat_send_player(player_name, msg)
 	end
 	if close_form then
 		minetest.close_formspec(player_name,	"pickp:form")
@@ -69,7 +69,7 @@ end)
 
 minetest.register_on_punchplayer(function(player, hitter, time_from_last_punch, tool_capabilities, dir, damage)
 	if is_stealing(player) then
-		disable_stealth(player, true, "Aborted robbery!")
+		disable_stealth(player, true, S("Aborted robbery!"))
 	end
 end)
 
@@ -165,6 +165,34 @@ local function get_stealth_ratio(angle_2d)
 	return stealth_ratio
 end
 
+local function detection_warning(clicker, clicked, alarm_type)
+	local clicker_name = clicker:get_player_name()
+	local clicked_name = clicked:get_player_name()
+	local msg
+	if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
+		if alarm_type == "try" then
+			msg = S("Someone has tried to steal from you!")
+		elseif alarm_type == "failed" then
+			msg = S("Someone has stolen from you!")
+		else
+			return
+		end
+	else
+		msg = clicker_name .. " "
+		if alarm_type == "try" then
+			msg = msg .. S("tried to steal from you!")
+		elseif alarm_type == "failed" then
+			msg = msg .. S("has stolen from you!")
+		else
+			return
+		end
+	end
+	minetest.chat_send_player(clicked_name, msg)
+	if pickp.settings["sound_alarm"] then
+		pickp.make_sound("player", clicked, "pickp_alarm", 10)
+	end
+end
+
 minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if formname ~= "pickp:form" then
 		return
@@ -216,17 +244,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			minetest.chat_send_player(player:get_player_name(), S("Successful robbery!"))
 		else
 			--DETECTION WARNING
-			local clicked_name = clicked:get_player_name()
-			local msg
-			if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
-				msg = S("Someone has stolen from you!")
-			else
-				msg = clicked_name.." "..S("has stolen from you")
-			end
-			minetest.chat_send_player(clicked_name, msg)
-			if pickp.settings["sound_alarm"] then
-				pickp.make_sound("player", clicked, "pickp_alarm", 10)
-			end
+			detection_warning(player, clicked, "failed")
 		end
 	else
 		disable_stealth(player, true, "The player has moved his items!")
@@ -266,21 +284,12 @@ local function stealth(clicker, clicked)
 		return
 	end
 	--DETECTED!
-	disable_stealth(clicker, true, "Failed Robbery!")
+	disable_stealth(clicker, true, S("Failed robbery!"))
 	if pickp.settings["sound_fail"] then
 		pickp.make_sound("player", clicker, "pickp_fail", 10)
 	end
 	--DETECTION WARNING
-	local msg
-	if math.random(0,1) <= pickp.settings["warning_failed_thief_ratio"] then
-		msg = S("Someone has tried to steal from you!")
-	else
-		msg = clicked_name.." "..S("tried to steal from you!")
-	end
-	minetest.chat_send_player(clicked_name, msg)
-	if pickp.settings["sound_alarm"] then
-		pickp.make_sound("player", clicked, "pickp_alarm", 10)
-	end
+	detection_warning(clicker, clicked, "try")
 end
 
 local function pickpocketing(clicker, clicked)
@@ -297,6 +306,8 @@ local function pickpocketing(clicker, clicked)
 		if pickp.settings["sound_fail"] then
 			pickp.make_sound("player", clicker, "pickp_fail", 10)
 		end
+		--DETECTION WARNING
+		detection_warning(clicker, clicked, "try")
 	end
 end
 
