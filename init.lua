@@ -318,6 +318,7 @@ minetest.register_on_rightclickplayer(function(player, clicker)
 			minetest.chat_send_player(clicker:get_player_name(), S("Too far to steal!"))
 			return
 		end
-		pickpocketing(clicker, player)
+		-- pickpocketing(clicker, player)
+		minetest.chat_send_player(clicker:get_player_name(), S("/EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")"))
 	end
 end)
