@@ -313,12 +313,10 @@ end
 
 minetest.register_on_rightclickplayer(function(player, clicker)
 	local controls = clicker:get_player_control()
-	if controls.sneak and not(is_stealing(clicker)) then
-		if not(check_distance(clicker, player)) then
-			minetest.chat_send_player(clicker:get_player_name(), S("Too far to steal!"))
-			return
-		end
-		-- pickpocketing(clicker, player)
-		minetest.chat_send_player(clicker:get_player_name(), S("/EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")"))
+	if not(check_distance(clicker, player)) then
+		minetest.chat_send_player(clicker:get_player_name(), S("Target too far."))
+		return
 	end
+	-- pickpocketing(clicker, player)
+	minetest.chat_send_player(clicker:get_player_name(), S(".EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")"))	
 end)
