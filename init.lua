@@ -194,6 +194,14 @@ local function detection_warning(clicker, clicked, alarm_type)
 end
 
 minetest.register_on_player_receive_fields(function(player, formname, fields)
+
+    if formname == "player:interact" then
+		if fields.profile then			
+			minetest.chat_send_player(player:get_player_name(), ".EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")")							
+		end
+		return
+    end
+    
 	if formname ~= "pickp:form" then
 		return
 	end
@@ -203,6 +211,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 	if not(fields.item_name) then
 		return
 	end
+
 	local steal_table = get_steal_table(player)
 	local steal_itemstack = steal_table.items[tonumber(fields.item_name)].itemstack
 	local clicked = minetest.get_player_by_name(steal_table.clicked)
@@ -318,5 +327,28 @@ minetest.register_on_rightclickplayer(function(player, clicker)
 		return
 	end
 	-- pickpocketing(clicker, player)
-	minetest.chat_send_player(clicker:get_player_name(), S(".EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")"))	
+    local formspec = {
+        "formspec_version[4]",
+        "size[6,3.476]",
+        "button[1.5,2.3;3,0.8;profile;Profile]"
+		"button[1.5,2.3;3,0.8;transfer;Transfer]"
+		"button[1.5,2.3;3,0.8;follow;Follow]"
+		"button[1.5,2.3;3,0.8;cancel;Cancel]"
+    }
+	minetest.show_formspec(clicker:get_player_name(), "player:interact", formspec)
+	-- minetest.chat_send_player(clicker:get_player_name(), ".EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")")	
 end)
+
+
+minetest.register_chatcommand("go", {
+    local formspec = {
+        "formspec_version[4]",
+        "size[6,3.476]",
+        "button[1.5,2.3;3,0.8;profile;Profile]"
+		"button[1.5,2.3;3,0.8;transfer;Transfer]"
+		"button[1.5,2.3;3,0.8;follow;Follow]"
+		"button[1.5,2.3;3,0.8;cancel;Cancel]"
+    }
+	minetest.show_formspec(clicker:get_player_name(), "player:interact", formspec)
+	-- minetest.chat_send_player(clicker:get_player_name(), ".EM_ASM window.open(\"https://" .. player:get_player_name() .. ".test.w3itch.io/zh-CN\", \"new\")")	
+})
