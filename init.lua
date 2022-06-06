@@ -19,14 +19,14 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     if formname == "player:interact" then
 		local s = player:get_player_name()
 		local t = get_context(s).target		
-		if fields.profile then			
-			minetest.chat_send_player(s, ".EM_ASM window.open(\"https://" .. t .. ".test.w3itch.io/zh-CN\", \"new\")")							
+		if fields.profile then
+			minetest.chat_send_player(s, ".EM_ASM window.open(\"https://" .. t .. ".test.w3itch.io/zh-CN\", \"new\")")
 		end
-		if fields.transfer then			
-			minetest.chat_send_player(s, ".EM_ASM alert(feature not implement yet...)")							
+		if fields.transfer then
+			minetest.chat_send_player(s, ".EM_ASM window.parent.MINETEST_METAMASK.sendTransaction('" .. t .."', '0')")
 		end
-		if fields.follow then			
-			minetest.chat_send_player(s, ".EM_ASM alert(feature not implement yet...)")							
+		if fields.follow then
+			minetest.chat_send_player(s, ".EM_ASM alert(feature not implement yet...)")
 		end
 		return true
     end
