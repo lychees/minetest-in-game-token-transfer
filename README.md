@@ -1,4 +1,4 @@
-# Pickpocketing
+# Web3
 
 A mod for Minetest.
 
