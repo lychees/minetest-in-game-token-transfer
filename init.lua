@@ -7,6 +7,47 @@ web3 = {}
 local modpath = minetest.get_modpath(modname)
 assert(loadfile(modpath.. "/settings.lua"))(modpath)
 
+--Follow
+followlist = {}
+backtracklist = {}
+
+local function register_follow(target_name, follower_name)
+	if followlist[target_name] == nil then
+		followlist[target_name] = {}
+	end
+	followlist[target_name][follower_name] = true
+	backtracklist[follower_name] = target_name
+end
+
+-- calculate distance
+local get_distance = function(a, b)
+
+	if not a or not b then return 50 end -- nil check
+
+	return vector.distance(a, b)
+end
+
+minetest.register_globalstep(function(dtime)
+	for target_name, follower_list in pairs(followlist) do
+		local target = minetest.get_player_by_name(target_name)
+		for follower_name, v in pairs(follower_list) do
+			local follower = minetest.get_player_by_name(follower_name)
+			if follower:get_player_control_bits() ~= 0 then
+				if followlist[target_name][follower_name] ~= nil then
+					followlist[target_name][follower_name] = nil
+				end
+				if backtracklist[follower_name] ~= nil then
+					backtracklist[follower_name] = nil
+				end
+				minetest.chat_send_player(target_name, follower_name .. " stop following you")
+				minetest.chat_send_player(follower_name, "you you have stopped following " .. target_name)
+			elseif get_distance(follower:get_pos(), target:get_pos()) > 5 then
+				follower:set_pos(target:get_pos())
+			end
+		end
+	end
+end)
+
 local _contexts = {}
 local function get_context(name)
     local context = _contexts[name] or {}
@@ -18,7 +59,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 
     if formname == "player:interact" then
 		local s = player:get_player_name()
-		local t = get_context(s).target		
+		local t = get_context(s).target	
 		if fields.profile then
 			minetest.chat_send_player(s, ".EM_ASM window.open(\"https://" .. t .. ".test.w3itch.io/zh-CN\", \"new\")")
 		end
@@ -26,7 +67,9 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
 			minetest.chat_send_player(s, ".EM_ASM window.parent.MINETEST_METAMASK.sendTransaction('" .. t .."', '0')")
 		end
 		if fields.follow then
-			minetest.chat_send_player(s, ".EM_ASM alert(feature not implement yet...)")
+			register_follow(t, s)
+			minetest.chat_send_player(s, "you have started following " .. t)
+			minetest.chat_send_player(t, s .. " starts to follow you")
 		end
 		return true
     end
@@ -44,7 +87,13 @@ local function check_distance(clicker, clicked)
 end
 
 minetest.register_on_leaveplayer(function(player)
-    _contexts[player:get_player_name()] = nil
+	local player_name = player:get_player_name()
+    _contexts[player_name] = nil
+	if followlist[player_name] ~= nil and backtracklist[player_name] ~= nil then
+		followlist[player_name] = nil
+		followlist[backtracklist[player_name]][player_name] = nil
+		backtracklist[player_name] = nil
+	end
 end)
 
 minetest.register_on_rightclickplayer(function(player, clicker)
